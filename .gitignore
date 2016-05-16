@@ -1,0 +1,5 @@
+*.class
+.classpath
+.project
+*.jardesc
+org.eclipse.jdt.core.prefs
