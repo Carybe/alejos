@@ -8,7 +8,7 @@ class MakeGoal implements Behavior{
 	}
 
 	public boolean takeControl(){
-
+		return false;
 	}
 
 	public void suppress(){

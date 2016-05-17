@@ -9,10 +9,10 @@ import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.subsumption.Behavior;
 
 class Player {
-	private int target, notTarget;
+	public int target, notTarget;
 	private double  wheelDiam, width;
 	
-	DifferentialPilot pilot;
+	private DifferentialPilot pilot;
 	private NXTRegulatedMotor claw;
 	
 	private CompassHTSensor compass;
@@ -32,8 +32,32 @@ class Player {
 						new NXTRegulatedMotor(rMotorPort));
 		claw = new NXTRegulatedMotor(clawPort);
 
+		pilot.setTravelSpeed(30);  	// cm per second
+        //pilot.setRotateSpeed(45);	// degrees per second
+
 		compass = new CompassHTSensor(compassPort);
 		color = new ColorSensor(colorPort);
 		head = new UltrasonicSensor(headPort);
 	}
+
+	public DifferentialPilot getPilot(){
+		return pilot;
+	}
+
+	public NXTRegulatedMotor getClaw(){
+		return claw;
+	}
+
+	public CompassHTSensor getCompass(){
+		return compass;
+	}
+
+	public ColorSensor getColor(){
+		return color;
+	}
+
+	public UltrasonicSensor getHead(){
+		return head;
+	}
+
 }

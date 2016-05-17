@@ -8,9 +8,7 @@ class GoToLine implements Behavior{
 
 	public GoToLine(Player player){
 		this.player = player;
-		navigator = new Navigator(player.pilot);
-		player.pilot.setTravelSpeed(20);  // cm por segundo
-        player.pilot.setRotateSpeed(45);  // graus por segundo
+		navigator = new Navigator(player.getPilot());
         navigator.singleStep(true);
         suppressed = false;
 	}

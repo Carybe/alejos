@@ -35,15 +35,12 @@ public class Alejos{
 
 		Behavior b1 = new GoToLine(alejadinho);
 		Behavior b2 = new SearchCube(alejadinho);
-		/*
 		Behavior b3 = new AvoidCube(alejadinho);
 		Behavior b4 = new MakeGoal(alejadinho);
 		Behavior b5 = new LandmarkFix(alejadinho);
 		Behavior b6 = new DeadReckoningFix(alejadinho);
-		*/
 
-		//Behavior[] behaviorList = { b1,b2,b3,b4,b5,b6 };
-		Behavior[] behaviorList = { b1,b2 };
+		Behavior[] behaviorList = { b1,b2,b3,b4,b5,b6 };
 		Arbitrator arby = new Arbitrator(behaviorList);
 		arby.start();
 	}	
