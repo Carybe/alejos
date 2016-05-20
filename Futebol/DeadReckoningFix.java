@@ -1,6 +1,8 @@
 import lejos.geom.Point;
+
 import lejos.nxt.SensorPort;
 import lejos.nxt.addon.CompassHTSensor;
+
 import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Pose;
@@ -16,9 +18,7 @@ class DeadReckoningFix implements Behavior{
 	public DeadReckoningFix(Player player){
 		this.player = player;
 		compass = player.getCompass();
-
-		// Maybe the position should be a player attribute
-		position = new OdometryPoseProvider(player.getPilot());
+		position = player.getPosition();
 	}
 
 	public boolean takeControl(){

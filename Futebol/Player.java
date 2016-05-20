@@ -5,16 +5,21 @@ import lejos.nxt.SensorPort;
 import lejos.nxt.TachoMotorPort;
 import lejos.nxt.UltrasonicSensor;
 
+import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.navigation.DifferentialPilot;
+import lejos.robotics.navigation.Navigator;
 import lejos.robotics.subsumption.Behavior;
 
 class Player {
-	public int target, notTarget;
+	public int target, notTarget, half;
 	private double  wheelDiam, width;
 	
 	private DifferentialPilot pilot;
 	private NXTRegulatedMotor claw;
 	
+	private OdometryPoseProvider position;
+	private Navigator navigator;
+
 	private CompassHTSensor compass;
 	private ColorSensor color;
 	private UltrasonicSensor head;
@@ -32,12 +37,22 @@ class Player {
 						new NXTRegulatedMotor(rMotorPort));
 		claw = new NXTRegulatedMotor(clawPort);
 
-		pilot.setTravelSpeed(30);  	// cm per second
+		claw.setSpeed(1000);
+
+		navigator = new Navigator(pilot);
+
+		position = new OdometryPoseProvider(pilot);
+
+		navigator.setPoseProvider(position);
+
+		pilot.setTravelSpeed(300);  	// cm per second
         //pilot.setRotateSpeed(45);	// degrees per second
 
 		compass = new CompassHTSensor(compassPort);
 		color = new ColorSensor(colorPort);
 		head = new UltrasonicSensor(headPort);
+
+		half = -1;
 	}
 
 	public DifferentialPilot getPilot(){
@@ -46,6 +61,10 @@ class Player {
 
 	public NXTRegulatedMotor getClaw(){
 		return claw;
+	}
+	
+	public OdometryPoseProvider getPosition(){
+		return position;
 	}
 
 	public CompassHTSensor getCompass(){
@@ -60,4 +79,7 @@ class Player {
 		return head;
 	}
 
+	public Navigator getNavigator(){
+		return navigator;
+	}
 }

@@ -8,14 +8,21 @@ class AvoidCube implements Behavior{
 	}
 
 	public boolean takeControl(){
-		return false;
+		return player.getColor().getColorID() == player.notTarget;
 	}
 
 	public void suppress(){
-
 	}
 
 	public void action(){
-		
+		player.getPilot().travel(-80);
+        player.getPilot().rotate(-65);
+	    
+	    player.getPilot().travel(450);
+        player.getPilot().rotate(65);
+        player.getPilot().travel(400);
+        
+        player.getPilot().rotate(65);
+	    player.getPilot().travel(450);
 	}
 }

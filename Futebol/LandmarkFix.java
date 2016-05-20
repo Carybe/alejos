@@ -6,6 +6,7 @@ class LandmarkFix implements Behavior{
 	public LandmarkFix(Player player){
 		this.player = player;
 	}
+
 	public boolean takeControl(){
 		return false;
 	}
