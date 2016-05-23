@@ -9,7 +9,7 @@ class GoToLine implements Behavior{
 	public GoToLine(Player player){
 		this.player = player;
 		navigator = player.getNavigator();
-        navigator.singleStep(true);
+        //navigator.singleStep(true);
 	}
 
 	public boolean takeControl(){
@@ -17,10 +17,10 @@ class GoToLine implements Behavior{
 	}
 
 	public void suppress(){
-		System.out.println("I'm going on an adventure!");
 	}
 
 	public void action(){
-		navigator.goTo(player.getPosition().getPose().getX(), player.half * 405f ,90f + player.half*90f);
+		navigator.goTo(player.getPosition().getPose().getX(), player.half * 400f ,90f + player.half*90f);
+		navigator.waitForStop();
 	}
 }

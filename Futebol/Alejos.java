@@ -40,7 +40,12 @@ public class Alejos{
 		Behavior b5 = new LandmarkFix(alejadinho);
 		Behavior b6 = new DeadReckoningFix(alejadinho);
 
-		Behavior[] behaviorList = { b1,b2,b3,b4,b5 };
+		alejadinho.getCompass().resetCartesianZero();
+		alejadinho.getCompass().resetCartesianZero();
+		alejadinho.getCompass().resetCartesianZero();
+
+		Behavior[] behaviorList = { b1,b2,b3,b4,b6 };
+//		Behavior[] behaviorList = { b1,b2 };
 		Arbitrator arby = new Arbitrator(behaviorList);
 		arby.start();
 	}	

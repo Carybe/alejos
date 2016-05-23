@@ -22,8 +22,8 @@ class DeadReckoningFix implements Behavior{
 	}
 
 	public boolean takeControl(){
-		current_compass = 360 - compass.getDegreesCartesian();
-		return ( Math.abs(current_compass - position.getPose().getHeading()) > 10);
+		current_compass = compass.getDegreesCartesian();
+		return ( 180 - Math.abs(Math.abs(current_compass - position.getPose().getHeading())%360-180) > 10);
 	}
 
 	public void suppress(){
@@ -31,6 +31,7 @@ class DeadReckoningFix implements Behavior{
 	}
 
 	public void action(){
+		System.out.println(current_compass +"\t"+ position.getPose().getHeading());
 		Point location = position.getPose().getLocation();
 		position.setPose( new Pose(location.x, location.y , (float) current_compass));
 	}

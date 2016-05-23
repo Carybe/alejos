@@ -45,10 +45,11 @@ class Player {
 
 		navigator.setPoseProvider(position);
 
-		pilot.setTravelSpeed(300);  	// cm per second
-        //pilot.setRotateSpeed(45);	// degrees per second
+		pilot.setTravelSpeed(180);  	// cm per second
+        pilot.setRotateSpeed(45);	    // degrees per second
 
 		compass = new CompassHTSensor(compassPort);
+		compass.resetCartesianZero();
 		color = new ColorSensor(colorPort);
 		head = new UltrasonicSensor(headPort);
 

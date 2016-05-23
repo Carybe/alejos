@@ -29,7 +29,7 @@ public class Tester{
 		position = alejadinho.getPosition();
 		navigator = alejadinho.getNavigator();
 		navigator.goTo(0f, -405f ,1f);
-		navigator.waitForStop();
+		//navigator.waitForStop();
 		navigator.goTo(834f, -405f ,0f);
 		navigator.waitForStop();
 	}	

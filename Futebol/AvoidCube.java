@@ -15,14 +15,16 @@ class AvoidCube implements Behavior{
 	}
 
 	public void action(){
+		System.out.println("Wrong cube");
+		player.getPilot().stop();
+
 		player.getPilot().travel(-80);
-        player.getPilot().rotate(-65);
-	    
-	    player.getPilot().travel(450);
-        player.getPilot().rotate(65);
-        player.getPilot().travel(400);
-        
-        player.getPilot().rotate(65);
-	    player.getPilot().travel(450);
+        player.getPilot().rotate(35);
+
+        player.getPilot().travel(275);
+        player.getPilot().rotate(-70);
+
+        player.getPilot().travel(275);
+        player.getPilot().rotate(35);
 	}
 }
