@@ -17,6 +17,7 @@ class AvoidCube implements Behavior{
 	public void action(){
 		System.out.println("Wrong cube");
 		player.getPilot().stop();
+		player.clear();
 
 		player.getPilot().travel(-80);
         player.getPilot().rotate(35);

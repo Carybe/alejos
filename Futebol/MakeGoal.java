@@ -15,7 +15,9 @@ class MakeGoal implements Behavior{
 	}
 
 	public void action(){
+		System.out.println("Making Goal");
 		player.getPilot().stop();
+		player.clear();
 		player.half *= -1;
 		player.getClaw().rotateTo(45);
 		player.getNavigator().goTo(994f,0f,0f);

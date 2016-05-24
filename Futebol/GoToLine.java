@@ -20,6 +20,7 @@ class GoToLine implements Behavior{
 	}
 
 	public void action(){
+		System.out.println("Going to line");
 		navigator.goTo(player.getPosition().getPose().getX(), player.half * 400f ,90f + player.half*90f);
 		navigator.waitForStop();
 	}

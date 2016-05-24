@@ -1,11 +1,9 @@
-import lejos.geom.Point;
-
-import lejos.robotics.localization.OdometryPoseProvider;
-
-import lejos.robotics.navigation.Navigator;
-import lejos.nxt.SensorPort;
-import lejos.nxt.MotorPort;
-import lejos.robotics.Color;
+import lejos.nxt.*;
+import lejos.nxt.addon.*;
+import lejos.robotics.navigation.*;
+import lejos.robotics.localization.*;
+import lejos.robotics.*;
+import lejos.geom.*;
 
 public class Tester{
 	public static void main(String[] args) {
@@ -25,12 +23,38 @@ public class Tester{
 		OdometryPoseProvider position;
 		Point origin;
 
+		DifferentialPilot pilot;
+		NXTRegulatedMotor claw;
+		CompassHTSensor compass;
+		ColorSensor color;
+		UltrasonicSensor head;
+
 		origin = new Point(0f,0f);
 		position = alejadinho.getPosition();
 		navigator = alejadinho.getNavigator();
-		navigator.goTo(0f, -405f ,1f);
-		//navigator.waitForStop();
-		navigator.goTo(834f, -405f ,0f);
+
+		pilot = alejadinho.getPilot();
+		claw = alejadinho.getClaw();
+		compass = alejadinho.getCompass();
+		color = alejadinho.getColor();
+		head = alejadinho.getHead();
+
+		while(true){
+			System.out.println(head.getDistance());
+		}
+
+		/*
+		navigator.goTo(0f, -405f ,0f);
 		navigator.waitForStop();
+		navigator.goTo(834f,-405f ,90f);
+		navigator.waitForStop();
+		navigator.goTo(834f,405f ,180f);
+		navigator.waitForStop();
+		navigator.goTo(0f,405f ,270f);
+		navigator.waitForStop();
+		navigator.goTo(0f,0f ,0f);
+		navigator.waitForStop();
+		//navigator.waitForStop();
+		*/
 	}	
 }

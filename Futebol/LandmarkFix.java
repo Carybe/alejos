@@ -13,19 +13,20 @@ class LandmarkFix implements Behavior {
 	private OdometryPoseProvider position;
 	private UltrasonicSensor head;
 	private CompassHTSensor compass;
-	private double current_compass;
     private double distance;
 	
 	public LandmarkFix(Player player) {
 		this.player = player;
 		head = player.getHead();
 		position = player.getPosition();
-		distance = setDistance();
+		compass = player.getCompass();
 	}
 
 	public boolean takeControl() {
-		return (0 - compass.getDegreesCartesian() < 15)
-				&& (Math.abs(position.getPose().getX()) -(1251f - distance) < 3) && (distance != 255*11.125);
+				//((90f + player.half*90f) - compass.getDegreesCartesian() < 2) &&
+		return head.getDistance() < 50 &&
+				(Math.abs(25 - head.getDistance()) > 2) &&
+				Math.abs((player.half * 400f + (25 - head.getDistance())) - position.getPose().getLocation().y) > 2;
 	}
 
 	public void suppress() {
@@ -33,12 +34,10 @@ class LandmarkFix implements Behavior {
 	}
 
 	public void action() {
-		current_compass = 360 - compass.getDegreesCartesian();
+		player.clear();
 		Point location = position.getPose().getLocation();
-		position.setPose( new Pose( (float) (1251f - distance), location.y , (float) current_compass));
+		position.setPose( new Pose(location.x , player.half * 400f + (25 - head.getDistance()), (float) compass.getDegreesCartesian()));
+		System.out.println("LandmarkFix:"+  (player.half * 400f + (25 - head.getDistance())));
 	}
-	
-	public double setDistance() {
-		return (head.getDistance())*11.125 - 417f;
-	}
+
 }

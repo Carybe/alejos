@@ -45,8 +45,8 @@ class Player {
 
 		navigator.setPoseProvider(position);
 
-		pilot.setTravelSpeed(180);  	// cm per second
-        pilot.setRotateSpeed(45);	    // degrees per second
+		pilot.setTravelSpeed(160);  	// cm per second
+        pilot.setRotateSpeed(60);	    // degrees per second
 
 		compass = new CompassHTSensor(compassPort);
 		compass.resetCartesianZero();
@@ -82,5 +82,10 @@ class Player {
 
 	public Navigator getNavigator(){
 		return navigator;
+	}
+
+	public void clear(){
+		navigator.stop();
+		navigator.clearPath();
 	}
 }

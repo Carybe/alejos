@@ -24,15 +24,18 @@ class SearchCube implements Behavior{
 
 	public void suppress(){
 		//navigator.clearPath();
+		player.clear();
 	}
 
 	public void action(){
-		System.out.println(player.half*position.getPose().getY() - 405);
-		player.getPilot().steer(0);
+		//navigator.stop();
+		//System.out.println(player.half*position.getPose().getY() - 405);
+		//player.getPilot().steer(0);
 		//navigator.addWaypoint(834f, -405f, 0);
 		//navigator.followPath();
 		//System.out.println("Hey! im searching!!!");
-		//navigator.goTo(417f - (player.half * 417f), -player.half * 405f ,0f);
+		System.out.println("Searching cube");
+		navigator.goTo(417f - (player.half * 417f), player.half * 405f ,0f);
 		//navigator.goTo(834f, -405f ,0f);
 	}
 }

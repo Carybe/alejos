@@ -44,7 +44,7 @@ public class Alejos{
 		alejadinho.getCompass().resetCartesianZero();
 		alejadinho.getCompass().resetCartesianZero();
 
-		Behavior[] behaviorList = { b1,b2,b3,b4,b6 };
+		Behavior[] behaviorList = { b1,b2,b3,b4,b5 };
 //		Behavior[] behaviorList = { b1,b2 };
 		Arbitrator arby = new Arbitrator(behaviorList);
 		arby.start();
