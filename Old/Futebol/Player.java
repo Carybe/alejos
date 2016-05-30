@@ -1,3 +1,13 @@
+/*
+*  MAC0318 - Futebol de Robô
+*
+* 	Nomes			Nºs USP
+* Carybé Gonçalves Silva		8033961
+* Gabriel Baptista              8941300
+* Diego Martos					6880528
+* Caio Quinta					5889856
+*
+*/
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.TachoMotorPort;
