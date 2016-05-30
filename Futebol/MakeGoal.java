@@ -1,4 +1,5 @@
 import lejos.robotics.subsumption.Behavior;
+import lejos.robotics.navigation.Pose;
 
 class MakeGoal implements Behavior{
 	private Player player;
@@ -19,12 +20,15 @@ class MakeGoal implements Behavior{
 		player.getPilot().stop();
 		player.clear();
 		player.half *= -1;
+		
 		player.getClaw().rotateTo(45);
 		player.getNavigator().goTo(994f,0f,0f);
 		player.getNavigator().waitForStop();
+		
 		player.getClaw().rotateTo(-105);
-		//player.getNavigator().goTo(834f,0f,-180f);
-		//player.getNavigator().waitForStop();
 		player.getClaw().rotateTo(0);
+
+		// Gambiarra pós-gol
+		player.getPosition().setPose( new Pose(player.half*834f, 0f, 15f));
 	}
 }

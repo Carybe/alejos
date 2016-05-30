@@ -1,14 +1,13 @@
-import lejos.nxt.addon.CompassHTSensor;
-import lejos.nxt.ColorSensor;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.TachoMotorPort;
+import lejos.nxt.ColorSensor;
+import lejos.nxt.addon.CompassHTSensor;
 import lejos.nxt.UltrasonicSensor;
 
 import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.Navigator;
-import lejos.robotics.subsumption.Behavior;
 
 class Player {
 	public int target, notTarget, half;
@@ -82,6 +81,15 @@ class Player {
 
 	public Navigator getNavigator(){
 		return navigator;
+	}
+
+	public float getX(){
+		return position.getPose().getX();
+	}
+
+
+	public float getY(){
+		return position.getPose().getY();
 	}
 
 	public void clear(){

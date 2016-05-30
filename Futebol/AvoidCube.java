@@ -20,12 +20,13 @@ class AvoidCube implements Behavior{
 		player.clear();
 
 		player.getPilot().travel(-80);
-        player.getPilot().rotate(35);
+        player.getPilot().rotate(37);
 
-        player.getPilot().travel(275);
-        player.getPilot().rotate(-70);
+        player.getPilot().travel(250);
+        player.getPilot().rotate(-71);
 
-        player.getPilot().travel(275);
-        player.getPilot().rotate(35);
+        player.getPilot().travel(250);
+
+        player.getPilot().rotate(34);
 	}
 }

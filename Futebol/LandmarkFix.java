@@ -1,32 +1,19 @@
-import lejos.geom.Point;
 import lejos.robotics.subsumption.Behavior;
-import lejos.nxt.UltrasonicSensor;
-import lejos.nxt.addon.CompassHTSensor;
 import lejos.robotics.navigation.Pose;
-
-import lejos.robotics.localization.OdometryPoseProvider;
-import lejos.robotics.navigation.DifferentialPilot;
-import lejos.robotics.navigation.Navigator;
 
 class LandmarkFix implements Behavior {
 	private Player player;
-	private OdometryPoseProvider position;
-	private UltrasonicSensor head;
-	private CompassHTSensor compass;
-    private double distance;
+    private float current_distance;
 	
 	public LandmarkFix(Player player) {
 		this.player = player;
-		head = player.getHead();
-		position = player.getPosition();
-		compass = player.getCompass();
+	 	current_distance = player.getHead().getDistance();
 	}
 
-	public boolean takeControl() {
-				//((90f + player.half*90f) - compass.getDegreesCartesian() < 2) &&
-		return head.getDistance() < 50 &&
-				(Math.abs(25 - head.getDistance()) > 2) &&
-				Math.abs((player.half * 400f + (25 - head.getDistance())) - position.getPose().getLocation().y) > 2;
+	public boolean takeControl() {	
+		return current_distance < 50 &&
+				(Math.abs(25 -  current_distance ) > 5) &&
+				Math.abs((player.half * 400f + (25 - current_distance )) - player.getY()) > 5;
 	}
 
 	public void suppress() {
@@ -35,9 +22,8 @@ class LandmarkFix implements Behavior {
 
 	public void action() {
 		player.clear();
-		Point location = position.getPose().getLocation();
-		position.setPose( new Pose(location.x , player.half * 400f + (25 - head.getDistance()), (float) compass.getDegreesCartesian()));
-		System.out.println("LandmarkFix:"+  (player.half * 400f + (25 - head.getDistance())));
+		player.getPosition().setPose( new Pose(player.getX() , player.half * 400f + (25 - current_distance), (float) player.getCompass().getDegreesCartesian()));
+		System.out.println("LandmarkFix:"+  (player.half * 400f + (25 - current_distance)));
 	}
 
 }

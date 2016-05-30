@@ -1,18 +1,3 @@
-/*
-import lejos.nxt.addon.CompassHTSensor;
-import lejos.nxt.Button;
-import lejos.nxt.ColorSensor;
-import lejos.nxt.LCD;
-import lejos.nxt.Motor;
-import lejos.nxt.NXTRegulatedMotor;
-import lejos.nxt.TachoMotorPort;
-import lejos.nxt.UltrasonicSensor;
-
-import lejos.robotics.navigation.DifferentialPilot;
-import lejos.robotics.navigation.Navigator;
-import lejos.robotics.RegulatedMotor;
-*/
-
 import lejos.nxt.SensorPort;
 import lejos.nxt.MotorPort;
 import lejos.robotics.Color;
@@ -21,8 +6,8 @@ import lejos.robotics.subsumption.Behavior;
 
 public class Alejos{
 	public static void main(String[] args) {
-		Player alejadinho = new Player(Color.RED,
-										Color.GREEN,
+		Player alejadinho = new Player(Color.GREEN,
+										Color.RED,
 										56f,
 										112f,
 										MotorPort.B,
@@ -44,8 +29,7 @@ public class Alejos{
 		alejadinho.getCompass().resetCartesianZero();
 		alejadinho.getCompass().resetCartesianZero();
 
-		Behavior[] behaviorList = { b1,b2,b3,b4,b5 };
-//		Behavior[] behaviorList = { b1,b2 };
+		Behavior[] behaviorList = { b1,b2,b3,b4,b5,b6 };
 		Arbitrator arby = new Arbitrator(behaviorList);
 		arby.start();
 	}	
