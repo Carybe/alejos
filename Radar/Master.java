@@ -1,12 +1,12 @@
 import lejos.pc.comm.*;
 import java.util.Scanner;
 import java.io.*;
-/**
- * Master: Sends commands to NXT Slave application
- * @author Denis Maua'
- * @since 2016-06-05
- *
- */
+
+import lejos.robotics.mapping.LineMap;
+import lejos.geom.Rectangle;
+import lejos.geom.Line;
+import lejos.robotics.navigation.Pose;
+
 public class Master {
 	private static final byte ROTATE = 0;
 	private static final byte ROTATETO = 1;
@@ -17,14 +17,8 @@ public class Master {
 	private DataOutputStream dos;
 	private DataInputStream dis;	
 	// NXT BRICK ID
-	private static final String NXT_ID = "NXT8";	
+	private static final String NXT_ID = "NXT2";	
 	
-	/**
-	 * Send command to the robot
-	 * @param command specifies command
-	 * @param param argument
-	 * @return
-	 */
 	private byte sendCommand(byte command, float param) {
 		try {
 			dos.writeByte(command);
@@ -44,9 +38,9 @@ public class Master {
 	 */
 	private void connect() {
 		try {
-			//NXTComm nxtComm = NXTCommFactory.createNXTComm(NXTCommFactory.USB);
+			NXTComm nxtComm = NXTCommFactory.createNXTComm(NXTCommFactory.USB);
 			/* Uncomment next line for Blluetooth communication */
-			NXTComm nxtComm = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);			
+			//NXTComm nxtComm = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);			
 			NXTInfo[] nxtInfo = nxtComm.search(Master.NXT_ID);
 			
 			if (nxtInfo.length == 0) {
@@ -83,14 +77,56 @@ public class Master {
 		}
 	}	
 	
+	static LineMap makeMap(lines){
+		float limit,x0,x1,x2,y0,y1,y2;
+		limit=160;
+		x0 = 0;
+		x1 = 110;
+		x2 = 155;
+		y0 = 0;
+		y1 = 132;
+		y2 = y0;
+
+		lines.add(new Line(x0,y0,x0,y1));
+		lines.add(new Line(x0,y1,x1,y1));
+		lines.add(new Line(x1,y1,x2,y2));
+		lines.add(new Line(x2,y2,x0,y0));
+
+		return new LineMap(lines,new Rectangle(0,0,limit,limit))
+	}
+
+
 	public static void main(String[] args) {
+		int n;
 		byte cmd = 0; float param = 0f; float ret=0f; 
 		Master master = new Master();
+		Pose poses[] = new Pose[];
+		lines[] = new Line[];
+		map = makeMap(lines);
+
+	    System.out.print("Enter the number of points:");
+	    n = (int) scan.nextFloat();
+		int range[] = new int[n];
+	    System.out.print("Now enter the points: \"x y\"");
+
+	    for (int i = 0; i < n ; i++ ) {
+		    float x = scan.nextFloat();
+		    float y = scan.nextFloat();
+		    poses.add(new Pose(x,y,0));
+		    range[i] = map.range(poses[i]);
+	    }
+
+
+
+
+
+
 		master.connect();
 	    Scanner scan = new Scanner( System.in );	    
-	    while(true) {
-	    	System.out.print("Enter command [0:ROTATE 1:ROTATETO 2:RANGE 3:STOP]: ");
-	    	cmd = (byte) scan.nextFloat(); 
+	    /*while(true) {
+	    	
+	    	cmd = (byte) scan.nextFloat();
+
 	    	if (cmd < 2) {
 	    	 System.out.print("Enter param [float]: ");
 	    	 param = scan.nextFloat();
@@ -99,6 +135,10 @@ public class Master {
 	    	}
 	    	ret = master.sendCommand(cmd, param);
 	    	System.out.println("cmd: " + cmd + " param: " + param + " return: " + ret);
+	    	*/
+	    for (int i = 0; i < 36 ; i++) {
+	    	master.sendCommand((byte)1,5*i*10f);
+	    	System.out.println(master.sendCommand((byte)2,0f));
 	    }
 	}
 

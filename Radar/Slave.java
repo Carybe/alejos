@@ -18,12 +18,12 @@ public class Slave {
 	private static final byte STOP = 3;
 	
 	public static void main(String[] args) throws Exception {
-		//USBConnection btc = USB.waitForConnection(); /* USB communication */
+		USBConnection btc = USB.waitForConnection(); /* USB communication */
 		/* Uncomment next line for Bluetooth */
-		BTConnection btc = Bluetooth.waitForConnection();
+		//BTConnection btc = Bluetooth.waitForConnection();
 		DataInputStream dis = btc.openDataInputStream();
 		DataOutputStream dos = btc.openDataOutputStream();
-		UltrasonicSensor sonar = new UltrasonicSensor(SensorPort.S1);
+		UltrasonicSensor sonar = new UltrasonicSensor(SensorPort.S4);
 		Motor.C.setSpeed(50);
 		LCD.drawString("READY", 0, 10);
 		while (true) {
