@@ -12,6 +12,7 @@ public class Master {
 	private static final byte ROTATETO = 1;
 	private static final byte RANGE = 2;
 	private static final byte STOP = 3;
+	private static final int NUM_OF_MEASURES = 5;
 	
 	private NXTComm nxtComm;
 	private DataOutputStream dos;
@@ -100,26 +101,24 @@ public class Master {
 		int n;
 		byte cmd = 0; float param = 0f; float ret=0f; 
 		Master master = new Master();
-		Pose poses[] = new Pose[];
+		float angle_interval =  360/NUM_OF_MEASURES;
 		lines[] = new Line[];
 		map = makeMap(lines);
 
 	    System.out.print("Enter the number of points:");
 	    n = (int) scan.nextFloat();
-		int range[] = new int[n];
+	    Pose poses[][] = new Pose[n][NUM_OF_MEASURES];
+		//int range[] = new int[n];
 	    System.out.print("Now enter the points: \"x y\"");
 
 	    for (int i = 0; i < n ; i++ ) {
 		    float x = scan.nextFloat();
 		    float y = scan.nextFloat();
-		    poses.add(new Pose(x,y,0));
-		    range[i] = map.range(poses[i]);
+		    for (int j=0; j < NUM_OF_MEASURES; j++) 
+		    	poses[i][j] = new Pose(x,y,j*angle_interval);
+		    //poses.add(new Pose(x,y,j*angle_interval);
+		    //range[i] = map.range(poses[i]);
 	    }
-
-
-
-
-
 
 		master.connect();
 	    Scanner scan = new Scanner( System.in );	    
