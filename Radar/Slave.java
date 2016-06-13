@@ -18,9 +18,9 @@ public class Slave {
 	private static final byte STOP = 3;
 	
 	public static void main(String[] args) throws Exception {
-		USBConnection btc = USB.waitForConnection(); /* USB communication */
+		//USBConnection btc = USB.waitForConnection(); /* USB communication */
 		/* Uncomment next line for Bluetooth */
-		//BTConnection btc = Bluetooth.waitForConnection();
+		BTConnection btc = Bluetooth.waitForConnection();
 		DataInputStream dis = btc.openDataInputStream();
 		DataOutputStream dos = btc.openDataOutputStream();
 		UltrasonicSensor sonar = new UltrasonicSensor(SensorPort.S4);
@@ -37,19 +37,40 @@ public class Slave {
 				switch (cmd) {
 				case ROTATE: 
 					Motor.C.rotate((int) (param + 0.5f));
-					dos.writeByte(0);
+					//dos.writeFloat(0);
 					break;
 				case ROTATETO: 
 					Motor.C.rotateTo((int) (param + 0.5f));
-					dos.writeByte(0);
+					//dos.writeFloat(0);
 					break;					
 				case RANGE:
-					dos.writeByte(sonar.getDistance());
+					float mean,sum,dist;
+					int j;
+					while (Motor.C.isMoving());
+				    
+				    mean = 0;
+				    j = 25; // try 25 times
+				    Thread.sleep(100);
+				    sum = sonar.getDistance();
+
+				    for (int k = 1; k < j; k++){
+				  		dist = sonar.getDistance();
+				  		if(dist == 255){
+				  			j--;
+				  		}
+				  		else{
+				  			sum += dist;
+				  		}
+				    }
+
+					Thread.sleep(100);
+					mean = (1.0f*sum)/(1.0f*j);
+					dos.writeFloat(mean);
 					break;
 				case STOP:
 					System.exit(1);
 				default:
-					dos.writeByte(-1);
+					dos.writeFloat(-1);
 				}
 				dos.flush();
 				
