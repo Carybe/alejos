@@ -37,35 +37,34 @@ public class Slave {
 				switch (cmd) {
 				case ROTATE: 
 					Motor.C.rotate((int) (param + 0.5f));
-					//dos.writeFloat(0);
+					dos.writeFloat(0);
 					break;
 				case ROTATETO: 
 					Motor.C.rotateTo((int) (param + 0.5f));
-					//dos.writeFloat(0);
+					dos.writeFloat(0);
 					break;					
 				case RANGE:
 					float mean,sum,dist;
-					int j;
+					int j,l;
+					
 					while (Motor.C.isMoving());
 				    
 				    mean = 0;
-				    j = 25; // try 25 times
+				    
+				    l = j = 25; // try 25 times
 				    Thread.sleep(100);
 				    sum = sonar.getDistance();
 
-				    for (int k = 1; k < j; k++){
+				    for (int k = 1; k < l; k++){
 				  		dist = sonar.getDistance();
-				  		if(dist == 255){
-				  			j--;
-				  		}
-				  		else{
-				  			sum += dist;
-				  		}
+				  		if(dist == 255) j--;
+				  		else 			sum += dist;
 				    }
 
 					Thread.sleep(100);
 					mean = (1.0f*sum)/(1.0f*j);
 					dos.writeFloat(mean);
+
 					break;
 				case STOP:
 					System.exit(1);
