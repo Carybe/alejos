@@ -15,7 +15,7 @@ public class Master {
 	private static final byte ROTATETO = 1;
 	private static final byte RANGE = 2;
 	private static final byte STOP = 3;
-	private static final int NUM_OF_MEASURES = 5;
+	private static final int NUM_OF_MEASURES = 36;
 	
 	private NXTComm nxtComm;
 	private DataOutputStream dos;
@@ -23,12 +23,12 @@ public class Master {
 	// NXT BRICK ID
 	private static final String NXT_ID = "NXT2";	
 	
-	private byte sendCommand(byte command, float param) {
+	private float sendCommand(byte command, float param) {
 		try {
 			dos.writeByte(command);
 			dos.writeFloat(param);
 			dos.flush();
-			return dis.readByte();
+			return dis.readFloat();
 		} catch (IOException ioe) {
 			System.err.println("IO Exception");
 			System.exit(1);
@@ -64,7 +64,7 @@ public class Master {
 			System.err.println("NXTComm Exception: "  + e.getMessage());
 			System.exit(1);
 		}
-	}		
+	}
 	/**
 	 * Terminate the program and send stop command to the robot
 	 *
@@ -81,57 +81,77 @@ public class Master {
 		}
 	}	
 	
-	static LineMap makeMap(lines){
+	static LineMap makeMap(Line [] lines){
 		float limit;
 		limit=220;
 
-		lines.add(new Line(0,0,0,160));
-		lines.add(new Line(0,160,78,106));
-		lines.add(new Line(78,106,151,162));
-		lines.add(new Line(151,162,0,217));
-		lines.add(new Line(0,217,0,0));
-		lines.add(new Line(34,39,44,39));
-		lines.add(new Line(44,39,44,58));
-		lines.add(new Line(44,58,34,58));
-		lines.add(new Line(34,58,34,39));
+		lines[0] = new Line(0,0,160,0);
+		lines[1] = new Line(160,0,78,106);
+		lines[2] = new Line(78,106,151,162);
+		lines[3] = new Line(151,162,0,217);
+		lines[4] = new Line(0,217,0,0);
+		lines[5] = new Line(34,39,44,39);
+		lines[6] = new Line(44,39,44,58);
+		lines[7] = new Line(44,58,34,58);
+		lines[8] = new Line(34,58,34,39);
 
-		return new LineMap(lines,new Rectangle(0,0,limit,limit))
+		return new LineMap(lines,new Rectangle(0,0,limit,limit));
 	}
 
-	float norm(float x, float y){
+	static float norm(float x, float y){
 		return (float) Math.exp(- Math.pow(x-y,2)/5.5);
 	}
 
 	public static void main(String[] args) {
 		int n;
-		byte cmd = 0; float param = 0f; float ret=0f; float x=0f;
+		byte cmd = 0; float param = 0f; float ret=0f; float z=0f;
+
+	    Scanner scan = new Scanner( System.in );	    
 		Master master = new Master();
 		float angle_interval =  360/NUM_OF_MEASURES;
-		lines[] = new Line[];
-		map = makeMap(lines);
+		Line[] lines = new Line[9];
+		LineMap map = makeMap(lines);
 
 	    System.out.print("Enter the number of points:");
 	    n = (int) scan.nextFloat();
-	    //Pose poses[][] = new Pose[n][NUM_OF_MEASURES];
+
 	    float ranges[][] = new float[n][NUM_OF_MEASURES];
-	    float belief[] = new float[n];
+	    float belief[][] = new float[n][NUM_OF_MEASURES];
 	    System.out.print("Now enter the points: \"x y\"");
 
 	    for (int i = 0; i < n ; i++ ) {
 		    float x = scan.nextFloat();
 		    float y = scan.nextFloat();
-		    for (int j=0; j < NUM_OF_MEASURES; j++) 
+		    for (int j=0; j < NUM_OF_MEASURES; j++){
 		    	ranges[i][j] = map.range(new Pose(x,y,j*angle_interval));
+		    	belief[i][j] = (1/(n*NUM_OF_MEASURES));
+		    }
 	    }
 
 		master.connect();
-	    Scanner scan = new Scanner( System.in );	    
 	    for (int i = 0; i < NUM_OF_MEASURES ; i++) {
 	    	master.sendCommand((byte)1, 5 * i * angle_interval);
-	    	x = master.sendCommand((byte)2,0f);
+	    	z = master.sendCommand((byte)2,0f);
+	    	
 	    	for(int j = 0; j < n; j++){
-	    		belief[j] = norm(x,ranges[j][i])*belief[j];
+	    		for (int k = 0 ; k < NUM_OF_MEASURES ; k++ ) {
+		    		belief[j][k] = belief[j][(k-i)%NUM_OF_MEASURES] * norm(z,belief[j][(k-i)%NUM_OF_MEASURES]);
+	    		}
 	    	}
 	    }
+
+	    float max = 0; float maxi = 0;
+	    for (int i = 0; i < n ; i++ ) {
+	    	float sum = 0;
+	    	for (int j = 0; j< n ; j++ ) {
+	    		sum += belief[i][j];
+	    	}
+	    	belief[i][0] = sum;
+	    	if(max < sum){
+	    		max = sum;
+	    		maxi = i;
+	    	}
+	    }
+		System.out.println("É mais provável que eu esteja no ponto P" + maxi);
 	}
 }
