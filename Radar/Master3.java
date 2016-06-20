@@ -118,69 +118,134 @@ public class Master3 {
 	}
 
 	static float norm(float x, float y){
-		return (float) Math.exp(- Math.pow(x-y,2)/5.5);
+		float norm = (float) Math.exp(-(x-y)*(x-y)/30);
+		if(norm<0.00001) return 0.00001f;
+		return norm;
+	}
+
+	static void printa(float[][] a){
+		for (int j = 0;j<NUM_OF_MEASURES ;j++ ) {
+			System.out.print(j +"°  ");
+		}
+		for (int i = 0;i<NUM_OF_POINTS ;i++ ) {
+			System.out.println("");
+			for (int j = 0;j<NUM_OF_MEASURES ;j++ ) {
+				System.out.printf("%.2f ",a[i][j]);
+			}
+		}
+		System.out.println("");
+	}
+
+	static void p(String s){
+		System.out.println(s);
 	}
 
 	public static void main(String[] args) {
 		int n;
 		byte cmd = 0; float param = 0f; float ret=0f; float z=0f;
 
-	    Scanner scan = new Scanner( System.in );	    
+		Scanner scan = new Scanner( System.in );		
 		Master3 master = new Master3();
 		float angle_interval =  360/NUM_OF_MEASURES;
 		Line[] lines = new Line[9];
 		LineMap map = makeMap(lines);
-		FileInputStream fin = getFile("/home/ccsl/radar/alejos/Radar/P1");
+		FileInputStream fin = getFile("/home/ccsl/radar/alejos/Radar/P" + args[0]);
 		InputStreamReader isr = new InputStreamReader(fin);
 		BufferedReader din = openFile(isr);
-//	    System.out.print("Enter the number of points:");
-//	    n = (int) scan.nextFloat();
+//		System.out.print("Enter the number of points:");
+//		n = (int) scan.nextFloat();
 
-	    float ranges[][] = new float[NUM_OF_POINTS][NUM_OF_MEASURES];
-	    float belief[][] = new float[NUM_OF_POINTS][NUM_OF_MEASURES];
-//	    System.out.print("Now enter the points: \"x y\"");
-	    Point points[] = new Point[NUM_OF_POINTS];	    
-	    points[0] = new Point(100f, 27f); 
-	    points[1] = new Point(31f, 156);
-	    points[2] = new Point(102f, 156f); 
+		float ranges[][] = new float[NUM_OF_POINTS][NUM_OF_MEASURES];
+		float belief[][] = new float[NUM_OF_POINTS][NUM_OF_MEASURES];
+		float move[][] = new float[NUM_OF_POINTS][NUM_OF_MEASURES];
+		Point points[] = new Point[NUM_OF_POINTS];		
+		points[0] = new Point(100f, 27f); 
+		points[1] = new Point(31f, 156f);
+		points[2] = new Point(102f, 156f); 
+		float alpha;
 
-	    for (int i = 0; i < NUM_OF_POINTS; i++ ) {
-		    //float x = scan.nextFloat();
-		    //float y = scan.nextFloat();
-		    for (int j=0; j < NUM_OF_MEASURES; j++){
-		    	ranges[i][j] = map.range(new Pose(points[i].x, points[i].y, j*angle_interval));
-		    	belief[i][j] = (1/(NUM_OF_POINTS*NUM_OF_MEASURES));
-		    }
-	    }
-	    // uncomment to connect with NXT2 and read measures
-		//master.connect();
-	    for (int i = 0; i < NUM_OF_MEASURES ; i++) {
-	    	//master.sendCommand((byte)1, 5 * i * angle_interval);
-	    	//z = master.sendCommand((byte)2,0f);
-	    	try { z = Float.parseFloat(din.readLine()); }
-	    	catch (Exception e ) {
-	    		System.err.println("erro");
-	    	}
-	    	System.out.println(z);
-	    	for(int j = 0; j < NUM_OF_POINTS; j++){
-	    		for (int k = 0 ; k < NUM_OF_MEASURES ; k++ ) {
-		    		belief[j][k] = belief[j][(k-i)%NUM_OF_MEASURES] * norm(z,belief[j][(k-i)%NUM_OF_MEASURES]);
-	    		}
-	    	}
-	    }
+		for (int i = 0; i < NUM_OF_POINTS; i++ ) {
+			//float x = scan.nextFloat();
+			//float y = scan.nextFloat();
+			for (int j=0; j < NUM_OF_MEASURES; j++){
+				ranges[i][j] = map.range(new Pose(points[i].x, points[i].y, j*angle_interval));
+				belief[i][j] = (1f/(NUM_OF_POINTS*NUM_OF_MEASURES));
+				}
+		}
+		// uncomment to connect with NXT2 and read measures
+		// master.connect();
+		for (int i = 0; i < NUM_OF_MEASURES ; i++) {
+			//master.sendCommand((byte)1, 5 * i * angle_interval);
+			//z = master.sendCommand((byte)2,0f);
 
-	    float max = 0; float maxi = 0;
-	    for (int i = 0; i < NUM_OF_POINTS ; i++ ) {
-	    	float sum = 0;
-	    	for (int j = 0; j< NUM_OF_POINTS ; j++ ) {
-	    		sum += belief[i][j];
-	    	}
-	    	belief[i][0] = sum;
-	    	if(max < sum){
-	    		max = sum;
-	    		maxi = i;
-	    	}
-	    }
-		System.out.println("É mais provável que eu esteja no ponto P" + maxi);
+			try { z = Float.parseFloat(din.readLine()); }
+			 catch (Exception e ) {
+				System.err.println("erro");
+			}
+
+			double sum = 0 ;
+
+			for(int j = 0; j < NUM_OF_POINTS; j++){
+				for (int k = 0 ; k < NUM_OF_MEASURES ; k++ ) {
+					alpha = norm(z,ranges[j][k]);
+					//System.out.println(alpha);
+					belief[j][k] *= alpha;
+					sum += belief[j][k];
+				}
+				System.out.println("");
+			}
+
+			/*
+			if (sum < 0.001){
+				for(int j = 0; j < NUM_OF_POINTS; j++){
+					for (int k = 0 ; k < NUM_OF_MEASURES ; k++ ) {
+						alpha = norm(z,ranges[j][k]);
+						belief[j][k] /= alpha;
+					}
+				}
+				continue;
+			}*/
+
+			// Normalização
+			for(int j = 0; j < NUM_OF_POINTS; j++)
+				for (int k = 0 ; k < NUM_OF_MEASURES ; k++ )
+					belief[j][k] /= sum;
+
+			System.out.println(sum);
+
+
+			// MOVIMENTO
+			System.arraycopy(belief,0,move,0,belief.length);
+			
+			System.out.print("move");
+			printa(move);
+
+			System.out.print("beli");
+			printa(belief);
+
+			for(int j = 0; j < NUM_OF_POINTS; j++)
+				for (int k = 0 ; k < NUM_OF_MEASURES ; k++ ){
+					//System.out.println((k+1)%NUM_OF_MEASURES + "->" + k);
+					belief[j][k] = move[j][(k+1)%NUM_OF_MEASURES];
+				}
+		}
+
+		float max = 0f; float maxi = 0f;
+		for (int q = 0; q < NUM_OF_POINTS ; q++ ) {
+			float sum = 0;
+			for (int j =0 ;j < NUM_OF_MEASURES ;j++ ) {
+				sum += belief[q][j];
+			}
+			//belief[i][0] = sum;
+			System.out.println("P" + (q+1) +": "+ sum);
+			if(max < sum){
+				max = sum;
+				maxi = q;
+			}
+		}
+
+
+
+		//System.out.println("\nÉ mais provável que eu esteja no ponto P" + (maxi+1));
 	}
 }
