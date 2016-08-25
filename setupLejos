@@ -1,0 +1,27 @@
+#!/bin/bash
+
+clear
+sudo apt-get update
+sudo apt-get install eclipse eclipse-jdt 
+sudo apt-get install libusb-dev
+
+sudo echo "SUBSYSTEM==\"usb\", DRIVER==\"usb\", ATTRS{idVendor}==\"0694\", ATTRS{idProduct}==\"0002\", GROUP=\"lego\", MODE=\"0660\"" >> /etc/udev/rules.d/70-lego.rules
+
+sudo echo " SUBSYSTEM==\"usb\", DRIVER==\"usb\", ATTRS{idVendor}==\"03eb\", ATTRS{idProduct}==\"6124\", GROUP=\"lego\", MODE=\"0660\"" >> /etc/udev/rules.d/70-lego.rules
+
+wget http://ufpr.dl.sourceforge.net/project/nxt.lejos.p/0.9.1beta-3/leJOS_NXJ_0.9.1beta-3.tar.gz
+tar -xzvf leJOS_NXJ_0.9.1beta-3.tar.gz
+sudo mv ./leJOS_NXJ_0.9.1beta-3 /opt/lejos
+rm -rf ./leJOS*
+
+groupadd lego
+gpasswd -a $USER lego
+
+echo "export LEJOS_HOME=/opt/lejos\nexport NXT_HOME=/opt/lejos\nexport PATH=\$PATH:\$LEJOS_HOME/bin" >> ~/.bashrc
+
+cd /opt/lejos/build/ && ant
+
+sudo echo "pref(\"browser.startup.homepage\", \"https://linux.ime.usp.br/~capella/MAC0318/\");" >> /etc/firefox/syspref.js
+
+echo "\n\n------------------ FINALIZAR -------------------"
+echo "http://www.lejos.org/tools/eclipse/plugin/nxj\n"
